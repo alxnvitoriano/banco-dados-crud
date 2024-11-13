@@ -1,13 +1,13 @@
 <html>
 
 <head>
-    <title>Agenda Alunos</title>
+    <title>Agenda do Aluno</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 
 <body>
-    <h1>Agenda Alunos</h1>
-    <p>Guarde a nota dos seus alunos!!!</p>
+    <h1>Agenda do Aluno</h1>
+    <p>Coloque a nota dos alunos</p>
     <div class="container">
         <div class="aluno-input">
             <input class=" aluno-input" type="text" id="nome" placeholder="Nome do aluno...">
@@ -15,7 +15,6 @@
             <button class="aluno-input" onclick="addAluno()">Adicionar Aluno</button>
         </div>
         <div class="alunos-list" id="alunosList">
-            <!-- As tarefas adicionadas aparecerão aqui -->
         </div>
     </div>
 
@@ -24,7 +23,7 @@
             const response = await fetch('http://localhost:3000/alunos');
             const alunos = await response.json();
             const alunosList = document.getElementById('alunosList');
-            alunosList.innerHTML = ''; // Clear the list before adding new items
+            alunosList.innerHTML = '';
             alunos.forEach(aluno => {
                 var entry = document.createElement('li');
 
@@ -69,7 +68,6 @@
             }
         }
 
-        // Fetch alunos when the page loads
         window.onload = fetchAlunos;
     </script>
 </body>
