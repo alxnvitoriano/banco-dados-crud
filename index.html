@@ -1,0 +1,75 @@
+<html>
+
+<head>
+    <title>Agenda Alunos</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+
+<body>
+    <h1>Agenda Alunos</h1>
+    <p>Guarde a nota dos seus alunos!!!</p>
+    <div class="container">
+        <div class="aluno-input">
+            <input class=" aluno-input" type="text" id="nome" placeholder="Nome do aluno...">
+            <input class="aluno-input" type="number" id="nota" placeholder="Nota" min="0" max="10">
+            <button class="aluno-input" onclick="addAluno()">Adicionar Aluno</button>
+        </div>
+        <div class="alunos-list" id="alunosList">
+            <!-- As tarefas adicionadas aparecerão aqui -->
+        </div>
+    </div>
+
+    <script>
+        async function fetchAlunos() {
+            const response = await fetch('http://localhost:3000/alunos');
+            const alunos = await response.json();
+            const alunosList = document.getElementById('alunosList');
+            alunosList.innerHTML = ''; // Clear the list before adding new items
+            alunos.forEach(aluno => {
+                var entry = document.createElement('li');
+
+                var deleteButton = document.createElement('button');
+                deleteButton.innerText = 'Deletar';
+                deleteButton.className = 'delete-button';
+                deleteButton.onclick = () => deleteAluno(aluno.id);
+                entry.appendChild(deleteButton);
+
+                var dataAluno = document.createTextNode(`Aluno: ${aluno.nome}, Nota: ${aluno.nota}`);
+                dataAluno.className = 'aluno-data';
+                entry.appendChild(dataAluno);
+                alunosList.appendChild(entry);
+            });
+        }
+
+        async function addAluno() {
+            var nome = document.getElementById('nome').value;
+            var nota = document.getElementById('nota').value;
+            if (nome === '' || nota === '') {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+            const response = await fetch('http://localhost:3000/aluno', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ nome, nota })
+            });
+            if (response.ok) {
+                fetchAlunos();
+            }
+        }
+
+        async function deleteAluno(id) {
+            const response = await fetch(`http://localhost:3000/aluno/${id}`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                fetchAlunos();
+            }
+        }
+
+        // Fetch alunos when the page loads
+        window.onload = fetchAlunos;
+    </script>
+</body>
